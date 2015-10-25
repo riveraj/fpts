@@ -22,7 +22,8 @@ public class Main extends Application {
 			model = buildNewModel();
 
 		if (getParameters().getRaw().get(0).equals("-delete"))
-			deleteUser(model, getParameters().getRaw().get(1));
+			if (!deleteUser(model, getParameters().getRaw().get(1)))
+				System.out.println("User does not exist!");
 
 		Manager manager = new LoginManager(primaryStage, model);
 		manager.init();
@@ -40,6 +41,9 @@ public class Main extends Application {
 	}
 
 	private boolean deleteUser(Model model, String loginId) {
+		if (model.getUsers() == null)
+			return false;
+
 		for (int i = 0; i < model.getUsers().size(); i++)
 			if (model.getUsers().get(i).getLoginId().equals(loginId)) {
 				model.getUsers().remove(i);
