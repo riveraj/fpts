@@ -11,13 +11,17 @@ import edu.rit.se.fpts.controller.command.Invoker;
 import edu.rit.se.fpts.model.Account;
 import edu.rit.se.fpts.model.Equity;
 import edu.rit.se.fpts.model.Transaction;
+import edu.rit.se.fpts.model.WatchedEquity;
+import edu.rit.se.fpts.model.external.EquityRecord;
 import edu.rit.se.fpts.model.observable.ModelObservable;
+import edu.rit.se.fpts.util.CSVUtil;
 import edu.rit.se.fpts.util.DataPersistenceUtil;
 import edu.rit.se.fpts.view.AccountDepositDialogController;
 import edu.rit.se.fpts.view.AccountTransferDialogController;
 import edu.rit.se.fpts.view.AccountWithdrawalDialogController;
 import edu.rit.se.fpts.view.AddAccountDialogController;
 import edu.rit.se.fpts.view.AddEquityDialogController;
+import edu.rit.se.fpts.view.EquitySearchDialogController;
 import edu.rit.se.fpts.view.MainViewController;
 import edu.rit.se.fpts.view.MarketSimulationDialogController;
 import edu.rit.se.fpts.view.RemoveEquityDialogController;
@@ -38,9 +42,12 @@ public class MainManager implements Manager {
 	private final ObservableList<Account> accountData = FXCollections.observableArrayList();
 	private final ObservableList<Equity> equityData = FXCollections.observableArrayList();
 	private final ObservableList<Transaction> transactionData = FXCollections.observableArrayList();
+	private final ObservableList<WatchedEquity> watchlistData = FXCollections.observableArrayList();
+	private final ObservableList<EquityRecord> equityRecordData = FXCollections.observableArrayList();
 	private final Invoker invoker = new Invoker();
 
 	private BorderPane rootLayout;
+	private EquityRecord equitySearchResult;
 
 	public MainManager(Stage primaryStage, ModelObservable model) {
 		this.primaryStage = primaryStage;
@@ -52,6 +59,8 @@ public class MainManager implements Manager {
 		accountData.addAll(model.getUser().getPortfolio().getAccounts());
 		equityData.addAll(model.getUser().getPortfolio().getEquities());
 		transactionData.addAll(model.getUser().getPortfolio().getTransactions());
+		watchlistData.addAll(model.getUser().getPortfolio().getWatchlist());
+		equityRecordData.addAll(CSVUtil.getEquitiesFromFile());
 
 		model.addObserver(new Observer() {
 			@Override
@@ -74,6 +83,14 @@ public class MainManager implements Manager {
 			public void update(Observable observable, Object object) {
 				transactionData.clear();
 				transactionData.addAll(model.getUser().getPortfolio().getTransactions());
+			}
+		});
+
+		model.addObserver(new Observer() {
+			@Override
+			public void update(Observable observable, Object object) {
+				watchlistData.clear();
+				watchlistData.addAll(model.getUser().getPortfolio().getWatchlist());
 			}
 		});
 
@@ -100,6 +117,22 @@ public class MainManager implements Manager {
 
 	public ObservableList<Transaction> getTransactionData() {
 		return this.transactionData;
+	}
+
+	public ObservableList<WatchedEquity> getWatchlistData() {
+		return this.watchlistData;
+	}
+
+	public ObservableList<EquityRecord> getEquityRecordData() {
+		return this.equityRecordData;
+	}
+
+	public void setEquitySearchResult(EquityRecord equitySearchResult) {
+		this.equitySearchResult = equitySearchResult;
+	}
+
+	public EquityRecord getEquitySearchResult() {
+		return this.equitySearchResult;
 	}
 
 	public void execute(Command command) {
@@ -293,7 +326,27 @@ public class MainManager implements Manager {
 	}
 
 	public boolean showEquitySearchDialog() {
-		return false;
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("view/EquitySearchDialog.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Market Simulation");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(pane);
+			dialogStage.setScene(scene);
+
+			EquitySearchDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setManager(this);
+			dialogStage.showAndWait();
+			return controller.success();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean showMarketSimulationDialog() {

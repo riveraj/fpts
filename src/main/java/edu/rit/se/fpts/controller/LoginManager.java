@@ -10,6 +10,7 @@ import edu.rit.se.fpts.model.Model;
 import edu.rit.se.fpts.model.Portfolio;
 import edu.rit.se.fpts.model.Transaction;
 import edu.rit.se.fpts.model.User;
+import edu.rit.se.fpts.model.WatchedEquity;
 import edu.rit.se.fpts.model.observable.ModelObservable;
 import edu.rit.se.fpts.util.DataPersistenceUtil;
 import edu.rit.se.fpts.view.CreateUserDialogController;
@@ -117,5 +118,7 @@ public class LoginManager implements Manager {
 		if (user.getPortfolio().getTransactions() == null)
 			user.getPortfolio().setTransactions(new ArrayList<Transaction>());
 
+		if (user.getPortfolio().getWatchlist() == null)
+			user.getPortfolio().setWatchlist(new ArrayList<WatchedEquity>());
 	}
 }

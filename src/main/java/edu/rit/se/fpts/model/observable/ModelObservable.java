@@ -10,6 +10,7 @@ import edu.rit.se.fpts.model.Model;
 import edu.rit.se.fpts.model.Portfolio;
 import edu.rit.se.fpts.model.Transaction;
 import edu.rit.se.fpts.model.User;
+import edu.rit.se.fpts.model.WatchedEquity;
 
 public class ModelObservable extends Observable {
 
@@ -32,8 +33,7 @@ public class ModelObservable extends Observable {
 	}
 
 	public void removeAccount(Account account) {
-		int index = this.user.getPortfolio().getAccounts().indexOf(account);
-		this.user.getPortfolio().getAccounts().remove(index);
+		this.user.getPortfolio().getAccounts().remove(account);
 		setChanged();
 		notifyObservers();
 	}
@@ -65,8 +65,7 @@ public class ModelObservable extends Observable {
 	}
 
 	public void removeEquity(Equity equity) {
-		int index = this.user.getPortfolio().getEquities().indexOf(equity);
-		this.user.getPortfolio().getEquities().remove(index);
+		this.user.getPortfolio().getEquities().remove(equity);
 		setChanged();
 		notifyObservers();
 	}
@@ -82,6 +81,16 @@ public class ModelObservable extends Observable {
 		transactions.remove(transactions.size() - 1);
 		setChanged();
 		notifyObservers();
+	}
+
+	public void addWatchedEquity(WatchedEquity watchedEquity) {
+		this.user.getPortfolio().getWatchlist().add(watchedEquity);
+		setChanged();
+		notifyObservers();
+	}
+
+	public void removeWatchedEquity(WatchedEquity watchedEquity) {
+		this.user.getPortfolio().getWatchlist().remove(watchedEquity);
 	}
 
 	public User getUser() {

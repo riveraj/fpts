@@ -11,6 +11,7 @@ public class Portfolio {
 	private List<Account> accounts;
 	private List<Equity> equities;
 	private List<Transaction> transactions;
+	private List<WatchedEquity> watchlist;
 
 	@XmlElement(name = "account")
 	public List<Account> getAccounts() {
@@ -37,5 +38,14 @@ public class Portfolio {
 
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	@XmlElement(name = "watchlist")
+	public List<WatchedEquity> getWatchlist() {
+		return this.watchlist;
+	}
+
+	public void setWatchlist(List<WatchedEquity> watchlist) {
+		this.watchlist = watchlist;
 	}
 }

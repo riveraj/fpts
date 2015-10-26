@@ -9,6 +9,7 @@ import edu.rit.se.fpts.controller.command.Command;
 import edu.rit.se.fpts.model.Account;
 import edu.rit.se.fpts.model.Equity;
 import edu.rit.se.fpts.model.Equity.EquityType;
+import edu.rit.se.fpts.model.external.EquityRecord;
 import edu.rit.se.fpts.util.AlertUtil;
 import edu.rit.se.fpts.util.DateUtil;
 import javafx.fxml.FXML;
@@ -93,13 +94,19 @@ public class AddEquityDialogController {
 	}
 
 	@FXML
+	private void handleEquitySearch() {
+		if (manager.showEquitySearchDialog())
+			populateFields(manager.getEquitySearchResult());
+	}
+
+	@FXML
 	private void handleCancel() {
 		dialogStage.close();
 	}
 
-	@FXML
-	private void handleEquitySearch() {
-		manager.showEquitySearchDialog();
+	private void populateFields(EquityRecord record) {
+		symbolField.setText(record.getSymbol());
+		priceField.setText(record.getPrice());
 	}
 
 	private boolean validInput() {
