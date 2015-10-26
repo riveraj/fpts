@@ -16,7 +16,7 @@
               <MenuItem mnemonicParsing="false" onAction="#handleImport" text="Import Portfolio..." />
                   <MenuItem mnemonicParsing="false" onAction="#handleExport" text="Export Portfolio..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

@@ -14,9 +14,11 @@ import edu.rit.se.fpts.model.WatchedEquity;
 
 public class ModelObservable extends Observable {
 
+	private final Model model;
 	private final User user;
 
 	public ModelObservable(Model model, int id) {
+		this.model = model;
 		this.user = model.getUsers().get(id);
 	}
 
@@ -91,6 +93,10 @@ public class ModelObservable extends Observable {
 
 	public void removeWatchedEquity(WatchedEquity watchedEquity) {
 		this.user.getPortfolio().getWatchlist().remove(watchedEquity);
+	}
+
+	public Model getModel() {
+		return this.model;
 	}
 
 	public User getUser() {

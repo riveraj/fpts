@@ -27,6 +27,11 @@ public class RootLayoutController {
 	}
 
 	@FXML
+	private void handleSave() {
+		manager.save();
+	}
+
+	@FXML
 	private void handleImport() {
 		FileChooser fileChooser = new FileChooser();
 
@@ -45,10 +50,6 @@ public class RootLayoutController {
 	}
 
 	@FXML
-	private void handleSave() {
-	}
-
-	@FXML
 	private void handleExport() {
 		FileChooser fileChooser = new FileChooser();
 
@@ -63,6 +64,11 @@ public class RootLayoutController {
 
 			manager.exportPortfolio(file);
 		}
+	}
+
+	@FXML
+	private void handleLogout() {
+		manager.logout();
 	}
 
 	@FXML
@@ -88,10 +94,5 @@ public class RootLayoutController {
 		alert.setContentText("Author: John Rivera\nFor the SWEN-262 Class Project.");
 
 		alert.showAndWait();
-	}
-
-	@FXML
-	private void handleExit() {
-		System.exit(0);
 	}
 }

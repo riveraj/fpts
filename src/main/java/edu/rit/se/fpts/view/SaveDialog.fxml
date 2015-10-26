@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="200.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="edu.rit.se.fpts.view.SaveDialogController">
+   <children>
+      <ButtonBar layoutX="14.0" layoutY="134.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+        <buttons>
+          <Button mnemonicParsing="false" onAction="#handleSave" text="Save" />
+            <Button mnemonicParsing="false" onAction="#handleDoNotSave" text="Do Not Save" />
+            <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+        </buttons>
+      </ButtonBar>
+      <Text layoutX="99.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You have unsaved changes to your portfolio." wrappingWidth="280.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Text layoutX="59.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to logout without saving?" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+   </children>
+</AnchorPane>

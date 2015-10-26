@@ -26,6 +26,7 @@ import edu.rit.se.fpts.view.MainViewController;
 import edu.rit.se.fpts.view.MarketSimulationDialogController;
 import edu.rit.se.fpts.view.RemoveEquityDialogController;
 import edu.rit.se.fpts.view.RootLayoutController;
+import edu.rit.se.fpts.view.SaveDialogController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -45,6 +46,8 @@ public class MainManager implements Manager {
 	private final ObservableList<WatchedEquity> watchlistData = FXCollections.observableArrayList();
 	private final ObservableList<EquityRecord> equityRecordData = FXCollections.observableArrayList();
 	private final Invoker invoker = new Invoker();
+
+	private boolean dirty = false;
 
 	private BorderPane rootLayout;
 	private EquityRecord equitySearchResult;
@@ -98,9 +101,27 @@ public class MainManager implements Manager {
 		showMainView();
 	}
 
+	public void save() {
+		DataPersistenceUtil.saveModelToDataFile(model.getModel());
+		dirty = false;
+	}
+
 	public void exportPortfolio(File file) {
 		DataPersistenceUtil.Mode mode = DataPersistenceUtil.Mode.XML;
 		DataPersistenceUtil.serialize(this.model.getUser().getPortfolio(), file, mode);
+	}
+
+	public void logout() {
+		boolean cancelled = false;
+
+		if (dirty)
+			cancelled = !showSaveDialog();
+
+		if (!cancelled) {
+			primaryStage.close();
+			Manager manager = new LoginManager(primaryStage, model.getModel());
+			manager.init();
+		}
 	}
 
 	public ModelObservable getModel() {
@@ -137,6 +158,7 @@ public class MainManager implements Manager {
 
 	public void execute(Command command) {
 		this.invoker.executeCommand(command);
+		dirty = true;
 	}
 
 	public void undo() {
@@ -178,6 +200,30 @@ public class MainManager implements Manager {
 			controller.setManager(this);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public boolean showSaveDialog() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("view/SaveDialog.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Do you want to save before logging out?");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(pane);
+			dialogStage.setScene(scene);
+
+			SaveDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setManager(this);
+			dialogStage.showAndWait();
+			return controller.success();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 
