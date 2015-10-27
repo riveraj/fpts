@@ -1,9 +1,11 @@
 package edu.rit.se.fpts.model.external;
 
+import edu.rit.se.fpts.model.external.visitor.Visitable;
+import edu.rit.se.fpts.model.external.visitor.Visitor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EquityRecord {
+public class EquityRecord implements Visitable {
 
 	private final StringProperty symbol = new SimpleStringProperty();
 	private final StringProperty name = new SimpleStringProperty();
@@ -11,6 +13,11 @@ public class EquityRecord {
 	private final StringProperty market = new SimpleStringProperty();
 	private final StringProperty secondaryIndex = new SimpleStringProperty();
 	private final StringProperty sector = new SimpleStringProperty();
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+	}
 
 	public String getSymbol() {
 		return this.symbol.get();

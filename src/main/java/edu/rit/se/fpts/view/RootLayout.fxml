@@ -25,6 +25,19 @@
                   <MenuItem mnemonicParsing="false" onAction="#handleRedo" text="Redo..." />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Price Updates">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Update Now..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Update Prices Every...">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleUpdateOneMinute" text="1 Minute" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleUpdateFiveMinutes" text="5 Minutes" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleUpdateFifteenMinutes" text="15 Minutes" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Simulation">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleSimulate" text="Simulate..." />

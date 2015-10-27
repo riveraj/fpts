@@ -119,8 +119,9 @@ public class EquitySearchDialogController {
 		ObservableList<EquityRecord> result = FXCollections.observableArrayList();
 
 		for (EquityRecord record : records)
-			if (record.getSymbol().contains(symbolSearchValue) && record.getName().contains(nameSearchValue)
-					&& (record.getMarket().contains(indexSearchValue)
+			if (record.getSymbol().toUpperCase().contains(symbolSearchValue)
+					&& record.getName().toUpperCase().contains(nameSearchValue)
+					&& (record.getMarket().toUpperCase().contains(indexSearchValue)
 							|| record.getSecondaryIndex().contains(indexSearchValue)))
 				result.add(record);
 

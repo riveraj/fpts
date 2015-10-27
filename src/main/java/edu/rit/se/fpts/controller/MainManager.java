@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import edu.rit.se.fpts.Main;
 import edu.rit.se.fpts.controller.command.Command;
@@ -13,6 +17,8 @@ import edu.rit.se.fpts.model.Equity;
 import edu.rit.se.fpts.model.Transaction;
 import edu.rit.se.fpts.model.WatchedEquity;
 import edu.rit.se.fpts.model.external.EquityRecord;
+import edu.rit.se.fpts.model.external.visitor.EquityRecordVisitor;
+import edu.rit.se.fpts.model.external.visitor.Visitor;
 import edu.rit.se.fpts.model.observable.ModelObservable;
 import edu.rit.se.fpts.util.CSVUtil;
 import edu.rit.se.fpts.util.DataPersistenceUtil;
@@ -45,8 +51,11 @@ public class MainManager implements Manager {
 	private final ObservableList<Transaction> transactionData = FXCollections.observableArrayList();
 	private final ObservableList<WatchedEquity> watchlistData = FXCollections.observableArrayList();
 	private final ObservableList<EquityRecord> equityRecordData = FXCollections.observableArrayList();
+	private final Visitor visitor = new EquityRecordVisitor();
 	private final Invoker invoker = new Invoker();
+	private final ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
 
+	private ScheduledFuture<?> handle;
 	private boolean dirty = false;
 
 	private BorderPane rootLayout;
@@ -64,6 +73,8 @@ public class MainManager implements Manager {
 		transactionData.addAll(model.getUser().getPortfolio().getTransactions());
 		watchlistData.addAll(model.getUser().getPortfolio().getWatchlist());
 		equityRecordData.addAll(CSVUtil.getEquitiesFromFile());
+
+		setUpdateInterval(1);
 
 		model.addObserver(new Observer() {
 			@Override
@@ -111,6 +122,19 @@ public class MainManager implements Manager {
 		DataPersistenceUtil.serialize(this.model.getUser().getPortfolio(), file, mode);
 	}
 
+	public void setUpdateInterval(long minutes) {
+		if (handle != null)
+			handle.cancel(false);
+
+		handle = service.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				for (EquityRecord record : equityRecordData)
+					visitor.visit(record);
+			}
+		}, 1, minutes, TimeUnit.MINUTES);
+	}
+
 	public void logout() {
 		boolean cancelled = false;
 
@@ -118,6 +142,7 @@ public class MainManager implements Manager {
 			cancelled = !showSaveDialog();
 
 		if (!cancelled) {
+			handle.cancel(false);
 			primaryStage.close();
 			Manager manager = new LoginManager(primaryStage, model.getModel());
 			manager.init();

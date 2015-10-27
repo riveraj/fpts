@@ -12,8 +12,6 @@ import javafx.beans.property.StringProperty;
 public class WatchedEquity {
 
 	private final StringProperty symbol = new SimpleStringProperty();
-	private final StringProperty name = new SimpleStringProperty();
-	private final ObjectProperty<BigDecimal> price = new SimpleObjectProperty<BigDecimal>();
 	private final ObjectProperty<BigDecimal> lowTrigger = new SimpleObjectProperty<BigDecimal>();
 	private final ObjectProperty<BigDecimal> highTrigger = new SimpleObjectProperty<BigDecimal>();
 
@@ -28,32 +26,6 @@ public class WatchedEquity {
 
 	public StringProperty symbolProperty() {
 		return this.symbol;
-	}
-
-	@XmlElement
-	public String getName() {
-		return this.name.get();
-	}
-
-	public void setName(String name) {
-		this.name.set(name);
-	}
-
-	public StringProperty nameProperty() {
-		return this.name;
-	}
-
-	@XmlElement
-	public BigDecimal getPrice() {
-		return this.price.get();
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price.set(price);
-	}
-
-	public ObjectProperty<BigDecimal> priceProperty() {
-		return this.price;
 	}
 
 	@XmlElement

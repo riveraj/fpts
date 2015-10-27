@@ -82,6 +82,21 @@ public class RootLayoutController {
 	}
 
 	@FXML
+	private void handleUpdateOneMinute() {
+		manager.setUpdateInterval(1);
+	}
+
+	@FXML
+	private void handleUpdateFiveMinutes() {
+		manager.setUpdateInterval(5);
+	}
+
+	@FXML
+	private void handleUpdateFifteenMinutes() {
+		manager.setUpdateInterval(15);
+	}
+
+	@FXML
 	private void handleSimulate() {
 		manager.showMarketSimulationDialog();
 	}

@@ -1,6 +1,5 @@
 package edu.rit.se.fpts.view;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import edu.rit.se.fpts.controller.MainManager;
@@ -8,6 +7,7 @@ import edu.rit.se.fpts.model.Account;
 import edu.rit.se.fpts.model.Equity;
 import edu.rit.se.fpts.model.Transaction;
 import edu.rit.se.fpts.model.WatchedEquity;
+import edu.rit.se.fpts.model.external.EquityRecord;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +55,7 @@ public class MainViewController {
 	private TableColumn<WatchedEquity, String> watchlistNameColumn;
 
 	@FXML
-	private TableColumn<WatchedEquity, BigDecimal> watchlistPriceColumn;
+	private TableColumn<WatchedEquity, String> watchlistPriceColumn;
 
 	@FXML
 	private DatePicker transactionFromDateField;
@@ -90,8 +90,8 @@ public class MainViewController {
 	@FXML
 	private Label equityTotalValueLabel;
 
-	private LocalDate fromDateSearchValue;
-	private LocalDate toDateSearchValue;
+	private LocalDate fromDateSearchValue = LocalDate.MIN;
+	private LocalDate toDateSearchValue = LocalDate.MAX;
 
 	private MainManager manager;
 
@@ -107,8 +107,9 @@ public class MainViewController {
 		transactionDateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
 
 		watchlistSymbolColumn.setCellValueFactory(cellData -> cellData.getValue().symbolProperty());
-		watchlistNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-		watchlistPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
+		watchlistNameColumn.setCellValueFactory(cellData -> getRecord(cellData.getValue().getSymbol()).nameProperty());
+		watchlistPriceColumn
+				.setCellValueFactory(cellData -> getRecord(cellData.getValue().getSymbol()).priceProperty());
 
 		showAccountDetails(null);
 		showEquityDetails(null);
@@ -120,7 +121,6 @@ public class MainViewController {
 
 		transactionFromDateField.valueProperty()
 				.addListener((Observable, oldValue, newValue) -> handleFilterFromDate(newValue));
-
 		transactionToDateField.valueProperty()
 				.addListener((Observable, oldValue, newValue) -> handleFilterToDate(newValue));
 	}
@@ -183,23 +183,22 @@ public class MainViewController {
 	}
 
 	public void handleDeleteEquityFromWatchlist() {
-
+		WatchedEquity equity = watchlistTable.getSelectionModel().getSelectedItem();
+		manager.getModel().removeWatchedEquity(equity);
 	}
 
-	public void handleAddEquityToWatchlist() {
-
+	public void handleWatchEquityInWatchlist() {
+		if (manager.showEquitySearchDialog()) {
+			WatchedEquity equity = new WatchedEquity();
+			equity.setSymbol(manager.getEquitySearchResult().getSymbol());
+			manager.getModel().addWatchedEquity(equity);
+		}
 	}
 
-	public void handleEditEquityInWatchlist() {
-
+	public void handleEditTriggers() {
 	}
 
 	public void handleAddDowJonesIndustrialAverageToWatchlist() {
-		WatchedEquity equity = new WatchedEquity();
-		equity.setSymbol("DOW");
-		equity.setName("Dow Jones Industrial Average");
-		equity.setPrice(BigDecimal.TEN);
-		manager.getModel().addWatchedEquity(equity);
 	}
 
 	public void handleFilterFromDate(LocalDate value) {
@@ -220,13 +219,26 @@ public class MainViewController {
 		transactionTable.setItems(filter());
 	}
 
+	private EquityRecord getRecord(String symbol) {
+		for (EquityRecord record : manager.getEquityRecordData()) {
+			if (record.getSymbol().equals(symbol))
+				return record;
+		}
+
+		return null;
+	}
+
 	private ObservableList<Transaction> filter() {
 		ObservableList<Transaction> transactions = manager.getTransactionData();
 		ObservableList<Transaction> result = FXCollections.observableArrayList();
 
-		for (Transaction transaction : transactions)
+		System.out.println(fromDateSearchValue);
+
+		for (Transaction transaction : transactions) {
+			System.out.println(transaction.getDate().isAfter(fromDateSearchValue));
 			if (transaction.getDate().isAfter(fromDateSearchValue) && transaction.getDate().isBefore(toDateSearchValue))
 				result.add(transaction);
+		}
 
 		return result;
 	}

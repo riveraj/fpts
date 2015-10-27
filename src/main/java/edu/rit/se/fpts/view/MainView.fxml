@@ -130,6 +130,32 @@
                   </AnchorPane>
             </content>
           </Tab>
+            <Tab text="Watchlist">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="watchlistTable" layoutX="86.0" layoutY="-52.0" prefHeight="367.0" prefWidth="600.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="watchlistSymbolColumn" prefWidth="75.0" text="Symbol" />
+                            <TableColumn fx:id="watchlistNameColumn" prefWidth="75.0" text="Name" />
+                              <TableColumn fx:id="watchlistPriceColumn" prefWidth="75.0" text="Price" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <ButtonBar layoutX="159.0" layoutY="617.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                          <buttons>
+                              <Button mnemonicParsing="false" onAction="#handleWatchEquityInWatchlist" text="Watch an Equity..." />
+                            <Button mnemonicParsing="false" onAction="#handleDeleteEquityFromWatchlist" text="Delete Selected..." />
+                              <Button mnemonicParsing="false" onAction="#handleEditTriggers" text="Add or Edit Triggers..." />
+                              <Button mnemonicParsing="false" onAction="#handleAddDowJonesIndustrialAverageToWatchlist" text="Add DJIA to Watchlist..." />
+                          </buttons>
+                        </ButtonBar>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
             <Tab text="Transaction History">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -163,32 +189,6 @@
                            </children>
                         </GridPane>
                      </children></AnchorPane>
-              </content>
-            </Tab>
-            <Tab text="Watchlist">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TableView fx:id="watchlistTable" layoutX="86.0" layoutY="-52.0" prefHeight="367.0" prefWidth="600.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <columns>
-                            <TableColumn fx:id="watchlistSymbolColumn" prefWidth="75.0" text="Symbol" />
-                            <TableColumn fx:id="watchlistNameColumn" prefWidth="75.0" text="Name" />
-                              <TableColumn fx:id="watchlistPriceColumn" prefWidth="75.0" text="Price" />
-                          </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                        <ButtonBar layoutX="159.0" layoutY="617.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                          <buttons>
-                            <Button mnemonicParsing="false" onAction="#handleDeleteEquityFromWatchlist" text="Delete Selected From Watchlist..." />
-                              <Button mnemonicParsing="false" onAction="#handleEditEquityInWatchlist" text="Edit Selected..." />
-                              <Button mnemonicParsing="false" onAction="#handleAddEquityToWatchlist" text="Add an Equity to Watchlist..." />
-                              <Button mnemonicParsing="false" onAction="#handleAddDowJonesIndustrialAverageToWatchlist" text="Watch the Dow Jones Industrial Average..." />
-                          </buttons>
-                        </ButtonBar>
-                     </children>
-                  </AnchorPane>
               </content>
             </Tab>
         </tabs>
